@@ -1,0 +1,8 @@
+API List
+
+Map: https://www.mapbox.com/
+Weather: https://www.weatherapi.com/
+Aircraft: https://opensky-network.org/
+          https://aviationstack.com/
+          https://uk.flightaware.com/commercial/aeroapi/
+Airports:

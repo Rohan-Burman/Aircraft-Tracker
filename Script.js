@@ -20,3 +20,13 @@ map.addControl(
 );
 
 map.addControl(new mapboxgl.NavigationControl());
+
+const layerList = document.getElementById("menu");
+const inputs = layerList.getElementsByTagName("input");
+
+for (const input of inputs) {
+    input.onclick = (layer) => {
+        const layerId = layer.target.id;
+        map.setStyle("mapbox://styles/" + layerId);
+    }
+}
