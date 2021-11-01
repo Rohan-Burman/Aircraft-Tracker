@@ -2,7 +2,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoicmIyMyIsImEiOiJja3R4MGtlMnExN2JrMnZtcmNnY2E4c
 const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/rb23/ckvcr41l82igb15o20zlmtz6i', // style URL
-    center: [50.0, 3.0], // starting position
+    center: [0.0, 50.0], // starting position
     zoom: 3 // starting zoom
 });
 
@@ -18,8 +18,14 @@ map.addControl(
         showUserHeading: true
     })
 );
-
+ 
+//Add navigation controls to map.
 map.addControl(new mapboxgl.NavigationControl());
+
+//Add location tracking of mouse pointer for testing purposes. Will be removed in final product
+map.on('mousemove', (e) => {
+        document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
+});
 
 const layerList = document.getElementById("menu");
 const inputs = layerList.getElementsByTagName("input");
@@ -27,6 +33,6 @@ const inputs = layerList.getElementsByTagName("input");
 for (const input of inputs) {
     input.onclick = (layer) => {
         const layerId = layer.target.id;
-        map.setStyle("mapbox://styles/" + layerId);
+        map.setStyle("mapbox://styles/rb23/" + layerId);
     }
 }
