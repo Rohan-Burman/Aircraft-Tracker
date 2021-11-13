@@ -1,7 +1,7 @@
 ﻿body {
     margin: 0;
     padding: 0;
-    overflow:hidden;
+    overflow: hidden;
 }
 
 #map {
@@ -11,19 +11,19 @@
     width: 100%;
 }
 
-ul{
+ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
     background-color: rgb(49, 49, 49);
-     /* border-bottom-left-radius: 15px;
+    /* border-bottom-left-radius: 15px;
      border-bottom-right-radius: 15px; */
 }
 
 li {
     float: left;
-    border-right:1px solid #bbb;
+    border-right: 1px solid #bbb;
 }
 
 li:last-child {
@@ -46,19 +46,19 @@ li a:hover:not(.active) {
     background-color: #042baa;
 }
 
-.navbar{
+.navbar {
     overflow: hidden;
 }
 
 #mapStyleMenu {
-background: rgb(49, 49, 49);
-padding: 15px;
-color: white;
-position: fixed;
-top: 97%;
-left: 50%;
-transform: translate(-50%, -50%);
-border-radius: 10px;
+    background: rgb(49, 49, 49);
+    padding: 15px;
+    color: white;
+    position: fixed;
+    top: 97%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
 }
 
 #coord {

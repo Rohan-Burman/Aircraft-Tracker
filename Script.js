@@ -18,13 +18,13 @@ map.addControl(
         showUserHeading: true
     })
 );
- 
+
 //Add navigation controls to map.
 map.addControl(new mapboxgl.NavigationControl());
 
 //Add location tracking of mouse pointer for testing purposes. Will be removed in final product
 map.on('mousemove', (e) => {
-        document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
+    document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
 });
 
 const layerList = document.getElementById("menu");
