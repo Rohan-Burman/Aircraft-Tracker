@@ -25,54 +25,80 @@ map.addControl(new mapboxgl.NavigationControl());
 // Add location tracking of mouse pointer for testing purposes. Will be removed in final product
 map.on('mousemove', (e) => {
     document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
-});
-
-// const layerList = document.getElementById("menu");
-// const inputs = layerList.getElementsByTagName("input");
-
-// for (const input of inputs) {
-//     input.onclick = (layer) => {
-//         const layerId = layer.target.id;
-//         map.setStyle("mapbox://styles/rb23/" + layerId);
-// }
-// }
+})
 
 
-map.on('load', () => {
-    // Load an image from an external URL.
-    map.loadImage(
-        'https://docs.mapbox.com/mapbox-gl-js/assets/cat.png',
-        (error, image) => {
-            if (error) throw error;
+var latitude = 0;
+var longitude = 0;
 
-            // Add the image to the map style.
-            map.addImage('plane', image);
+//Adds plane graphic to map
+function addGraphic(longtitude, latitude) {
+    map.on('load', () => {
+        // Load an image from an external URL.
+        map.loadImage(
+            "https://raw.githubusercontent.com/Rohan-Burman/Aircraft-Tracker/302c32ef51d1e1582c8896b0be610763cc1e03ca/planeMarker.png?token=AWAF5T7QBPICRCEGUGNPGOLBTD5CI",
+            (error, image) => {
+                if (error) throw error;
 
-            // Add a data source containing one point feature.
-            map.addSource('point', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'FeatureCollection',
-                    'features': [{
-                        'type': 'Feature',
-                        'geometry': {
-                            'type': 'Point',
-                            'coordinates': [0.0, 50.0]
-                        }
-                    }]
-                }
-            });
+                // Add the image to the map style.
+                map.addImage('plane', image);
 
-            // Add a layer to use the image to represent the data.
-            map.addLayer({
-                'id': 'points',
-                'type': 'symbol',
-                'source': 'point', // reference the data source
-                'layout': {
-                    'icon-image': 'plane', // reference the image
-                    'icon-size': 0.25
-                }
-            });
-        }
-    );
-});
+                // Add a data source containing one point feature.
+                map.addSource('point', {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'FeatureCollection',
+                        'features': [{
+                            'type': 'Feature',
+                            'geometry': {
+                                'type': 'Point',
+                                'coordinates': [longtitude, latitude]
+                            }
+                        }]
+                    }
+                });
+
+                // Add a layer to use the image to represent the data.
+                map.addLayer({
+                    'id': 'points',
+                    'type': 'symbol',
+                    'source': 'point', // reference the data source
+                    'layout': {
+                        'icon-image': 'plane', // reference the image
+                        'icon-size': 0.05
+                    }
+                });
+            }
+        );
+    });
+}
+
+//OpenSky API url
+const url = "https://opensky-network.org/api/states/all";
+/* const url = "https://opensky-network.org/api/states/all?time="; */ //url for time will be used later
+
+async function getFlights() {
+    var time = Date.now(); //gets UNIX time in milliseconds.
+    /* const response = await fetch((url + time)); //gets information from API at the current UNIX time.
+    const data = await response.json();
+    console.log(data);
+    console.log(time);
+    var count = Object.keys(data).length;
+    console.log(count); */
+
+    var response = await fetch(url);
+    var data = await response.json();
+    console.log(data);
+    for (var key in data.states) {
+        longtitude = data.states[key][5];
+        latitude = data.states[key][6];
+        console.log(key);
+        console.log(longtitude);
+        console.log(latitude);
+        //addGraphic(longtitude, latitude);
+
+    }
+}
+
+getFlights();
+//setInterval(getFlights, 5000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
