@@ -1,77 +1,86 @@
-    body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-    }
-    
-    #map {
-        position: absolute;
-        top: 46px;
-        bottom: 0;
-        width: 100%;
-    }
-    
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: rgb(49, 49, 49);
-        /* border-bottom-left-radius: 15px;
+﻿body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#map {
+    position: absolute;
+    top: 46px;
+    bottom: 0;
+    width: 100%;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(49, 49, 49);
+    /* border-bottom-left-radius: 15px;
      border-bottom-right-radius: 15px; */
-    }
-    
-    li {
-        float: left;
-        border-right: 1px solid #bbb;
-    }
-    
-    li:last-child {
-        border-right: none;
-    }
-    
-    li a {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-    
-    li a:hover:not(.active) {
-        background-color: #042baa6b;
-    }
-    
-    .active {
-        background-color: #042baa;
-    }
-    
-    .navbar {
-        overflow: hidden;
-    }
-    
-    #mapStyleMenu {
-        background: rgb(49, 49, 49);
-        padding: 15px;
-        color: white;
-        position: fixed;
-        top: 97%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 10px;
-    }
-    
-    #coord {
-        display: table;
-        position: relative;
-        margin: 0px auto;
-        word-wrap: anywhere;
-        white-space: pre-wrap;
-        padding: 10px;
-        border: none;
-        border-radius: 3px;
-        font-size: 12px;
-        text-align: center;
-        color: #222;
-        background: #fff;
-    }
+}
+
+li {
+    float: left;
+    border-right: 1px solid #bbb;
+}
+
+li:last-child {
+    border-right: none;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #042baa6b;
+}
+
+.active {
+    background-color: #042baa;
+}
+
+.navbar {
+    overflow: hidden;
+}
+
+#mapStyleMenu {
+    background: rgb(49, 49, 49);
+    padding: 15px;
+    color: white;
+    position: fixed;
+    top: 97%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+}
+
+#coord {
+    display: table;
+    position: relative;
+    margin: 0px auto;
+    word-wrap: anywhere;
+    white-space: pre-wrap;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    color: #222;
+    background: #fff;
+}
+
+.marker {
+    background-image: url("planeMarker.png");
+    background-size: cover;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+}
