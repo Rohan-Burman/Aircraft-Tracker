@@ -3,7 +3,7 @@ const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/rb23/ckvcr41l82igb15o20zlmtz6i', // style URL
     center: [0.0, 50.0], // starting position
-    zoom: 3 // starting zoom
+    zoom: 3, // starting zoom
 });
 
 // Add geolocate control to the map.
@@ -112,8 +112,8 @@ async function getFlights() {
         geojson.geometry.track = track;
 
         console.log(key);
-        console.log(geojson.geometry.coordinates);
-        console.log(geojson.geometry.track);
+        /* console.log(geojson.geometry.coordinates);
+        console.log(geojson.geometry.track); */
 
         /* const airMarker = document.createElement('div');
         airMarker.className = 'marker'
@@ -124,8 +124,6 @@ async function getFlights() {
             .setLngLat(key.geometry.coordinates)
             .addTo(map) */
 
-        console.log("graphic + ${key}");
-        console.log(graphic);
         var graphic = graphic + key;
         var graphic = document.createElement('div')
         graphic.className = "marker";
@@ -133,6 +131,7 @@ async function getFlights() {
         new mapboxgl.Marker(graphic)
             .setLngLat(geojson.geometry.coordinates)
             .setRotation(geojson.geometry.track)
+            .setRotationAlignment('map')
             .addTo(map)
 
         /* var graphic = new Graphic(longitude, latitude);
@@ -146,4 +145,4 @@ async function getFlights() {
 }
 
 getFlights();
-setInterval(getFlights, 5000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
+setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
