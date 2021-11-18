@@ -32,9 +32,10 @@ var longitude = 0;
 var track = 0;
 
 class Graphic {
-    constructor(longitude, latitude) {
+    constructor(longitude, latitude, track) {
         this.longitude = longitude;
         this.latitude = latitude;
+        this.track = track;
     }
 
     /* //Adds plane graphic to map
@@ -64,15 +65,7 @@ class Graphic {
                         }
                     });
 
-                    // Add a layer to use the image to represent the data.
-                    map.addLayer({
-                        'id': 'points',
-                        'type': 'symbol',
-                        'source': 'point', // reference the data source
-                        'layout': {
-                            'icon-image': 'plane', // reference the image
-                            'icon-size': 0.05
-                        }
+                    
                     });
                 }
             );
@@ -88,6 +81,7 @@ var geojson = {
         'track': track,
     }
 }
+// Add a layer to use the image to represent the data.
 
 
 
@@ -131,18 +125,33 @@ async function getFlights() {
         new mapboxgl.Marker(graphic)
             .setLngLat(geojson.geometry.coordinates)
             .setRotation(geojson.geometry.track)
-            .setRotationAlignment('map')
+            .setRotationAlignment('points')
             .addTo(map)
 
-        /* var graphic = new Graphic(longitude, latitude);
+        var graphic = new Graphic(longitude, latitude);
         console.log(graphic.longitude);
         console.log(graphic.latitude);
         console.log(graphic);
-        graphic.addGraphic(); */
 
+        //graphic.addGraphic();
+        map.addLayer({
+            'id': 'points',
+            'type': 'symbol',
+            'source': 'point', // reference the data source
+            'layout': {
+                'icon-image': 'plane', // reference the image
+                'icon-size': 0.05
+            }
+        })
+        
+        
 
     }
 }
+async function removeGraphic(){
+        map.removeLayer("points");
+}
 
 getFlights();
+setInterval(removeGraphic, 9999);
 setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
