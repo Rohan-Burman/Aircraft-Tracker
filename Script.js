@@ -27,61 +27,35 @@ map.on('mousemove', (e) => {
     document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
 })
 
-var latitude = 0;
+var icao = "";
+var callsign = "";
 var longitude = 0;
+var latitude = 0;
+var velocity = "";
 var track = 0;
+var altitude = "";
 
-class Graphic {
+
+/* class Graphic {
     constructor(longitude, latitude, track) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.track = track;
     }
-
-    /* //Adds plane graphic to map
-    addGraphic() {
-        map.on('load', () => {
-            // Load an image from an external URL.
-            map.loadImage(
-                "https://raw.githubusercontent.com/Rohan-Burman/Aircraft-Tracker/302c32ef51d1e1582c8896b0be610763cc1e03ca/planeMarker.png?token=AWAF5T7QBPICRCEGUGNPGOLBTD5CI",
-                (error, image) => {
-                    if (error) throw error;
-
-                    // Add the image to the map style.
-                    map.addImage('plane', image);
-
-                    // Add a data source containing one point feature.
-                    map.addSource('point', {
-                        'type': 'geojson',
-                        'data': {
-                            'type': 'FeatureCollection',
-                            'features': [{
-                                'type': 'Feature',
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [this.longitude, this.latitude]
-                                }
-                            }]
-                        }
-                    });
-
-                    
-                    });
-                }
-            );
-        });
-    }*/
-}
+} */
 
 var geojson = {
     'type': 'Feature',
+    'icao': icao,
+    'callsign': callsign,
     'geometry': {
         'type': 'Point',
         'coordinates': [longitude, latitude],
         'track': track,
+        'velocity': velocity,
+        'altitude': altitude,
     }
 }
-// Add a layer to use the image to represent the data.
 
 
 
@@ -90,66 +64,64 @@ const url = "https://opensky-network.org/api/states/all";
 const urlImage = "planeMarker.png";
 
 async function getFlights() {
+
+    // Add a layer to use the image to represent the data.
+    var points = map.addLayer({
+        'id': 'points',
+        'type': 'symbol',
+    })
+
     var response = await fetch(url);
     var data = await response.json();
+
+    //Loops through the elements in the json response to assign needed information to geojson for each iteration.
     console.log(data);
     for (var key in data.states) {
+        icao = data.states[key][0];
+        callsign = data.states[key][1]
         longitude = data.states[key][5];
         latitude = data.states[key][6];
-        track = data.states[key][11]
+        velocity = data.states[key][9];
+        track = data.states[key][11];
+        altitude = data.states[key][13];
 
-        /* if (longitude == null || longitude == null || heading == null) {
-            continue
-        }*/
-
+        //Assigning the variables to the geojson object.
+        geojson.icao = icao;
+        geojson.callsign = callsign;
         geojson.geometry.coordinates = [longitude, latitude];
         geojson.geometry.track = track;
+        geojson.geometry.velocity = velocity;
+        geojson.geometry.altitude = altitude;
+
 
         console.log(key);
         /* console.log(geojson.geometry.coordinates);
         console.log(geojson.geometry.track); */
 
-        /* const airMarker = document.createElement('div');
-        airMarker.className = 'marker'
-        airMarker.style.backgroundImage = urlImage;
-        airMarker.style.backgorundSize = "100%";
-
-        new mapboxgl.Marker(airMarker)
-            .setLngLat(key.geometry.coordinates)
-            .addTo(map) */
-
-        var graphic = graphic + key;
+        var graphic = graphic;
         var graphic = document.createElement('div')
         graphic.className = "marker";
 
         new mapboxgl.Marker(graphic)
             .setLngLat(geojson.geometry.coordinates)
             .setRotation(geojson.geometry.track)
-            .setRotationAlignment('points')
-            .addTo(map)
+            .setRotationAlignment('map')
+            .addTo(points)
 
-        var graphic = new Graphic(longitude, latitude);
+        //var graphic = new Graphic(longitude, latitude);
         console.log(graphic.longitude);
         console.log(graphic.latitude);
         console.log(graphic);
 
         //graphic.addGraphic();
-        map.addLayer({
-            'id': 'points',
-            'type': 'symbol',
-            'source': 'point', // reference the data source
-            'layout': {
-                'icon-image': 'plane', // reference the image
-                'icon-size': 0.05
-            }
-        })
-        
-        
+
+
+
 
     }
 }
-async function removeGraphic(){
-        map.removeLayer("points");
+async function removeGraphic() {
+    map.removeLayer(points);
 }
 
 getFlights();
