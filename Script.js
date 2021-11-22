@@ -58,7 +58,6 @@ var geojson = {
 }
 
 
-
 //OpenSky API url
 const url = "https://opensky-network.org/api/states/all";
 const urlImage = "planeMarker.png";
@@ -93,7 +92,6 @@ async function getFlights() {
         geojson.geometry.velocity = velocity;
         geojson.geometry.altitude = altitude;
 
-
         console.log(key);
         /* console.log(geojson.geometry.coordinates);
         console.log(geojson.geometry.track); */
@@ -114,12 +112,9 @@ async function getFlights() {
         console.log(graphic);
 
         //graphic.addGraphic();
-
-
-
-
     }
 }
+
 async function removeGraphic() {
     map.removeLayer(points);
 }

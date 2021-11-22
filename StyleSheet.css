@@ -79,8 +79,8 @@ li a:hover:not(.active) {
 .marker {
     background-image: url("planeMarker.png");
     background-size: cover;
-    width: 15px;
-    height: 15px;
+    width: 17px;
+    height: 17px;
     border-radius: 50%;
     cursor: pointer;
 }
