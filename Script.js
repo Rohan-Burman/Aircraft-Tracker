@@ -62,6 +62,10 @@ var geojson = {
 const url = "https://opensky-network.org/api/states/all";
 const urlImage = "planeMarker.png";
 
+/* async function removeGraphic() {
+    points.removeLayer();
+}
+
 async function getFlights() {
 
     // Add a layer to use the image to represent the data.
@@ -92,10 +96,6 @@ async function getFlights() {
         geojson.geometry.velocity = velocity;
         geojson.geometry.altitude = altitude;
 
-        console.log(key);
-        /* console.log(geojson.geometry.coordinates);
-        console.log(geojson.geometry.track); */
-
         var graphic = graphic;
         var graphic = document.createElement('div')
         graphic.className = "marker";
@@ -112,13 +112,53 @@ async function getFlights() {
         console.log(graphic);
 
         //graphic.addGraphic();
+
+    }
+    for (var key in data.states) {
+        setInterval(removeGraphic, 9000);
     }
 }
+getFlights();*/
+/* setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes */
 
-async function removeGraphic() {
-    map.removeLayer(points);
-}
+map.on("load", async() => {
+    var geojson = await getFlightData();
 
-getFlights();
-setInterval(removeGraphic, 9999);
-setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
+
+    for (var key in data.states) {
+        map.addSource(icao, {
+            type: "geojson",
+            data: geojson,
+        })
+    }
+
+    map.addLayer({
+        "id": "icao",
+        "type": "symbol",
+        "source": "icao",
+        "layout": {
+            "icon-image": "planeMarker.png"
+        }
+    })
+});
+
+const update = setInterval(async() => {
+    var data = await getFlightData(update);
+    map.getSource("icao").setData(geojson)
+}, 10000)
+
+async function getFlightData(update) {
+    try {
+        var response = await fetch(url, { method: "GET" });
+        for (var key in data.states) {
+            icao = data.states[key][0];
+            callsign = data.states[key][1]
+            longitude = data.states[key][5];
+            latitude = data.states[key][6];
+            velocity = data.states[key][9];
+            track = data.states[key][11];
+            altitude = data.states[key][13];
+
+
+        }
+    }
