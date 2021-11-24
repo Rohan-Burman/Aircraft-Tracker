@@ -36,13 +36,16 @@ var track = 0;
 var altitude = "";
 
 
-/* class Graphic {
-    constructor(longitude, latitude, track) {
+class Graphic {
+    constructor(longitude, latitude, track, altitude) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.track = track;
+        this.altitude = altitude;
+        this.callsign = callsign;
+        this.icao = icao;
     }
-} */
+}
 
 var geojson = {
     'type': 'Feature',
@@ -57,22 +60,23 @@ var geojson = {
     }
 }
 
-
-//OpenSky API url
-const url = "https://opensky-network.org/api/states/all";
 const urlImage = "planeMarker.png";
 
-/* async function removeGraphic() {
-    points.removeLayer();
+async function removeGraphic() {
+    var myobj = document.getElementsByClassName("marker")
+    myobj.remove();
+    if (myobj == null) {
+        alert("error");
+    }
+    //Need to delete all instances of the graphic class.
+
 }
 
 async function getFlights() {
+    const url = "https://opensky-network.org/api/states/all";
 
     // Add a layer to use the image to represent the data.
-    var points = map.addLayer({
-        'id': 'points',
-        'type': 'symbol',
-    })
+    /* */
 
     var response = await fetch(url);
     var data = await response.json();
@@ -80,6 +84,7 @@ async function getFlights() {
     //Loops through the elements in the json response to assign needed information to geojson for each iteration.
     console.log(data);
     for (var key in data.states) {
+        //Assigning data from the API into varibles.
         icao = data.states[key][0];
         callsign = data.states[key][1]
         longitude = data.states[key][5];
@@ -104,61 +109,17 @@ async function getFlights() {
             .setLngLat(geojson.geometry.coordinates)
             .setRotation(geojson.geometry.track)
             .setRotationAlignment('map')
-            .addTo(points)
+            .addTo(map)
 
-        //var graphic = new Graphic(longitude, latitude);
-        console.log(graphic.longitude);
-        console.log(graphic.latitude);
-        console.log(graphic);
-
-        //graphic.addGraphic();
-
+        var graphic = new Graphic(longitude, latitude, track, altitude);
+        console.log(graphic.longitude, ',', graphic.latitude);
+        console.log(this.coordinates);
     }
     for (var key in data.states) {
         setInterval(removeGraphic, 9000);
     }
 }
-getFlights();*/
-/* setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes */
 
-map.on("load", async() => {
-    var geojson = await getFlightData();
-
-
-    for (var key in data.states) {
-        map.addSource(icao, {
-            type: "geojson",
-            data: geojson,
-        })
-    }
-
-    map.addLayer({
-        "id": "icao",
-        "type": "symbol",
-        "source": "icao",
-        "layout": {
-            "icon-image": "planeMarker.png"
-        }
-    })
-});
-
-const update = setInterval(async() => {
-    var data = await getFlightData(update);
-    map.getSource("icao").setData(geojson)
-}, 10000)
-
-async function getFlightData(update) {
-    try {
-        var response = await fetch(url, { method: "GET" });
-        for (var key in data.states) {
-            icao = data.states[key][0];
-            callsign = data.states[key][1]
-            longitude = data.states[key][5];
-            latitude = data.states[key][6];
-            velocity = data.states[key][9];
-            track = data.states[key][11];
-            altitude = data.states[key][13];
-
-
-        }
-    }
+/* map.on("load", () => { getFlights() }); */
+getFlights();
+setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
