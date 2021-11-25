@@ -37,14 +37,65 @@ var altitude = "";
 
 
 class Graphic {
-    constructor(longitude, latitude, track, altitude) {
+    constructor(longitude, latitude, track, altitude, callsign, icao) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.track = track;
         this.altitude = altitude;
         this.callsign = callsign;
         this.icao = icao;
+
     }
+    getLongitude() {
+        return this.longitude;
+    }
+
+    setLongitude(longitude) {
+        this.longitude = longitude;
+    }
+
+    getLatitude() {
+        return this.latitude;
+    }
+
+    setLatitude(latitude) {
+        this.latitude = latitude;
+    }
+
+    getTrack() {
+        return this.track;
+    }
+
+    setTrack(track) {
+        this.track = track;
+    }
+
+    getAltitude() {
+        return this.altitude;
+    }
+
+    setAltitude(altitude) {
+        this.altitude = altitude;
+    }
+
+    getCallsign() {
+        return this.callsign;
+    }
+
+    setCallsign(callsign) {
+        this.callsign = callsign;
+    }
+
+    getIcao() {
+        return this.icao;
+    }
+
+    setIcao(icao) {
+        this.icao = icao;
+    }
+
+
+
 }
 
 var geojson = {
@@ -63,13 +114,15 @@ var geojson = {
 const urlImage = "planeMarker.png";
 
 async function removeGraphic() {
-    var myobj = document.getElementsByClassName("marker")
-    myobj.remove();
-    if (myobj == null) {
-        alert("error");
-    }
-    //Need to delete all instances of the graphic class.
+    setTimeout(function() {
+        var myobj = document.getElementsByClassName("marker")
+        myobj.remove();
+        if (myobj == null) {
+            alert("error");
+        }
+        //Need to delete all instances of the graphic class.
 
+    }, 5000);
 }
 
 async function getFlights() {
@@ -93,6 +146,9 @@ async function getFlights() {
         track = data.states[key][11];
         altitude = data.states[key][13];
 
+
+
+
         //Assigning the variables to the geojson object.
         geojson.icao = icao;
         geojson.callsign = callsign;
@@ -108,18 +164,19 @@ async function getFlights() {
         new mapboxgl.Marker(graphic)
             .setLngLat(geojson.geometry.coordinates)
             .setRotation(geojson.geometry.track)
-            .setRotationAlignment('map')
+            //.setRotationAlignment('map')
             .addTo(map)
 
         var graphic = new Graphic(longitude, latitude, track, altitude);
-        console.log(graphic.longitude, ',', graphic.latitude);
-        console.log(this.coordinates);
+        //console.log(graphic.longitude, ',', graphic.latitude);
+        console.log(graphic.track, geojson.geometry.track);
     }
+
     for (var key in data.states) {
-        setInterval(removeGraphic, 9000);
+        removeGraphic();
     }
 }
 
 /* map.on("load", () => { getFlights() }); */
 getFlights();
-setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
+//setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
