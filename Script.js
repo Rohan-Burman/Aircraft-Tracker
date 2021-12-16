@@ -34,32 +34,25 @@ var latitude = 0;
 var velocity = "";
 var track = 0;
 var altitude = "";
+var coordinates = [];
 
+var currentMarkers = [];
 
 class Graphic {
-    constructor(longitude, latitude, track, altitude, callsign, icao) {
-        this.longitude = longitude;
-        this.latitude = latitude;
+    constructor(coordinates, track, altitude, callsign, icao) {
+        this.coordinates = coordinates
         this.track = track;
         this.altitude = altitude;
         this.callsign = callsign;
         this.icao = icao;
 
     }
-    getLongitude() {
-        return this.longitude;
+    getCoordinates() {
+        return this.coordinates
     }
 
-    setLongitude(longitude) {
-        this.longitude = longitude;
-    }
-
-    getLatitude() {
-        return this.latitude;
-    }
-
-    setLatitude(latitude) {
-        this.latitude = latitude;
+    setCoordinates(coordinates) {
+        this.coordinates = coordinates;
     }
 
     getTrack() {
@@ -93,12 +86,9 @@ class Graphic {
     setIcao(icao) {
         this.icao = icao;
     }
-
-
-
 }
 
-var geojson = {
+/* var geojson = {
     'type': 'Feature',
     'icao': icao,
     'callsign': callsign,
@@ -109,20 +99,21 @@ var geojson = {
         'velocity': velocity,
         'altitude': altitude,
     }
-}
+} */
 
 const urlImage = "planeMarker.png";
 
 async function removeGraphic() {
-    setTimeout(function() {
-        var myobj = document.getElementsByClassName("marker")
-        myobj.remove();
-        if (myobj == null) {
-            alert("error");
+    /* if (currentMarkers !== null) {
+        for (var i = currentMarkers.length - 1; i >= 0; i--) {
+            currentMarkers[i].remove();
         }
-        //Need to delete all instances of the graphic class.
+    } */
 
-    }, 5000);
+    /* currentMarkers.forEach(Marker => marker.remove());
+    currentMarkers */
+
+    graphic = null;
 }
 
 async function getFlights() {
@@ -135,7 +126,7 @@ async function getFlights() {
     var data = await response.json();
 
     //Loops through the elements in the json response to assign needed information to geojson for each iteration.
-    console.log(data);
+    //console.log(data);
     for (var key in data.states) {
         //Assigning data from the API into varibles.
         icao = data.states[key][0];
@@ -145,38 +136,30 @@ async function getFlights() {
         velocity = data.states[key][9];
         track = data.states[key][11];
         altitude = data.states[key][13];
+        coordinates = [longitude, latitude];
 
+        //Making new instance of the Graphic class and assinging variables.
+        var graphic = new Graphic(coordinates, track, altitude, callsign, icao);
 
+        //Creating a HTML class for each graphic.
+        var markerGraphic = document.createElement('div')
+        markerGraphic.className = "marker";
 
-
-        //Assigning the variables to the geojson object.
-        geojson.icao = icao;
-        geojson.callsign = callsign;
-        geojson.geometry.coordinates = [longitude, latitude];
-        geojson.geometry.track = track;
-        geojson.geometry.velocity = velocity;
-        geojson.geometry.altitude = altitude;
-
-        var graphic = graphic;
-        var graphic = document.createElement('div')
-        graphic.className = "marker";
-
-        new mapboxgl.Marker(graphic)
-            .setLngLat(geojson.geometry.coordinates)
-            .setRotation(geojson.geometry.track)
+        var graphic = new mapboxgl.Marker(markerGraphic)
+            .setLngLat(graphic.getCoordinates())
+            .setRotation(graphic.getTrack())
             //.setRotationAlignment('map')
-            .addTo(map)
+            .addTo(map);
+        currentMarkers.push(graphic);
 
-        var graphic = new Graphic(longitude, latitude, track, altitude);
         //console.log(graphic.longitude, ',', graphic.latitude);
-        console.log(graphic.track, geojson.geometry.track);
+        /* console.log(graphic.track, geojson.geometry.track); */
     }
 
-    for (var key in data.states) {
-        removeGraphic();
-    }
+    setInterval(removeGraphic, 92000);
+
 }
 
 /* map.on("load", () => { getFlights() }); */
 getFlights();
-//setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
+setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
