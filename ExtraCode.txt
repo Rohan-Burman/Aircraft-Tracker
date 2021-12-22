@@ -56,3 +56,23 @@ async function getFlightData(update) {
         throw new Error(err);
     }
 } */
+
+
+
+
+
+
+
+//Creating a HTML class for each graphic.
+        var markerGraphic = document.createElement('div')
+        markerGraphic.className = "marker";
+
+        var graphic = new mapboxgl.Marker(markerGraphic)
+            .setLngLat(graphic.getCoordinates())
+            .setRotation(graphic.getTrack())
+            //.setRotationAlignment('map')
+            .addTo(map);
+        currentMarkers.push(graphic);
+
+        //console.log(graphic.longitude, ',', graphic.latitude);
+        /* console.log(graphic.track, geojson.geometry.track); */

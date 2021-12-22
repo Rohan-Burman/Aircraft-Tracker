@@ -6,6 +6,7 @@ const map = new mapboxgl.Map({
     zoom: 3, // starting zoom
 });
 
+map.dragRotate.disable();
 // Add geolocate control to the map.
 map.addControl(
     new mapboxgl.GeolocateControl({
@@ -18,6 +19,7 @@ map.addControl(
         showUserHeading: true
     })
 );
+
 
 //Add navigation controls to map.
 map.addControl(new mapboxgl.NavigationControl());
@@ -35,58 +37,9 @@ var velocity = "";
 var track = 0;
 var altitude = "";
 var coordinates = [];
-
+var markerNumber = 0;
 var currentMarkers = [];
 
-class Graphic {
-    constructor(coordinates, track, altitude, callsign, icao) {
-        this.coordinates = coordinates
-        this.track = track;
-        this.altitude = altitude;
-        this.callsign = callsign;
-        this.icao = icao;
-
-    }
-    getCoordinates() {
-        return this.coordinates
-    }
-
-    setCoordinates(coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    getTrack() {
-        return this.track;
-    }
-
-    setTrack(track) {
-        this.track = track;
-    }
-
-    getAltitude() {
-        return this.altitude;
-    }
-
-    setAltitude(altitude) {
-        this.altitude = altitude;
-    }
-
-    getCallsign() {
-        return this.callsign;
-    }
-
-    setCallsign(callsign) {
-        this.callsign = callsign;
-    }
-
-    getIcao() {
-        return this.icao;
-    }
-
-    setIcao(icao) {
-        this.icao = icao;
-    }
-}
 
 /* var geojson = {
     'type': 'Feature',
@@ -103,24 +56,17 @@ class Graphic {
 
 const urlImage = "planeMarker.png";
 
-async function removeGraphic() {
-    /* if (currentMarkers !== null) {
-        for (var i = currentMarkers.length - 1; i >= 0; i--) {
-            currentMarkers[i].remove();
-        }
-    } */
-
-    /* currentMarkers.forEach(Marker => marker.remove());
-    currentMarkers */
-
-    graphic = null;
+function removeGraphic() {
+    if (currentMarkers !== null) {
+        currentMarkers.forEach((marker) => marker.remove());
+        currentMarkers = [];
+    }
 }
 
 async function getFlights() {
     const url = "https://opensky-network.org/api/states/all";
 
-    // Add a layer to use the image to represent the data.
-    /* */
+    key = 0;
 
     var response = await fetch(url);
     var data = await response.json();
@@ -136,30 +82,22 @@ async function getFlights() {
         velocity = data.states[key][9];
         track = data.states[key][11];
         altitude = data.states[key][13];
+
         coordinates = [longitude, latitude];
 
-        //Making new instance of the Graphic class and assinging variables.
-        var graphic = new Graphic(coordinates, track, altitude, callsign, icao);
+        var marker = document.createElement("div");
+        marker.className = "marker";
 
-        //Creating a HTML class for each graphic.
-        var markerGraphic = document.createElement('div')
-        markerGraphic.className = "marker";
-
-        var graphic = new mapboxgl.Marker(markerGraphic)
-            .setLngLat(graphic.getCoordinates())
-            .setRotation(graphic.getTrack())
-            //.setRotationAlignment('map')
+        var graphic = new mapboxgl.Marker(marker)
+            .setLngLat(coordinates)
+            .setRotation(track)
+            .setRotationAlignment('map')
             .addTo(map);
         currentMarkers.push(graphic);
-
-        //console.log(graphic.longitude, ',', graphic.latitude);
-        /* console.log(graphic.track, geojson.geometry.track); */
     }
-
-    setInterval(removeGraphic, 92000);
-
 }
 
 /* map.on("load", () => { getFlights() }); */
 getFlights();
-setInterval(getFlights, 10000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes
+setInterval(getFlights, 5000); //Calls the getFlights function every 10s. Will be lowered, but currently used for testing purposes.
+setInterval(removeGraphic, 7500);
