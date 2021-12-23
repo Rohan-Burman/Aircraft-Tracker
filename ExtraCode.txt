@@ -1,3 +1,29 @@
+ <!--Not essential so will be finished at a later stage-->
+    <div id="mapStyleMenu">
+        <!--Satellite filter on map-->
+        <input id="ckvgez78nej8h15qq0xm34dba" type="radio" name="rtoggle" value="satellite">
+        <label for="ckvgez78nej8h15qq0xm34dba">Satellite</label>
+
+        <!--Satellite filter on map-->
+        <input id="mapbox/light-v10" type="radio" name="rtoggle" value="light">
+        <label for="mapbox/light-v10">Light</label>
+
+        <!--Satellite filter on map-->
+        <input id="mapbox/dark-v10" type="radio" name="rtoggle" value="dark">
+        <label for="mapbox/dark-v10">Dark</label>
+
+        <!--Blue filter on map-->
+        <input id="ckvcr41l82igb15o20zlmtz6i" type="radio" name="rtoggle" value="blue" checked="checked">
+        <label for="ckvcr41l82igb15o20zlmtz6i">Blue</label>
+    </div>
+
+
+
+
+
+
+
+
 /* map.on("load", async() => {
     var geojson = await getFlightData();
 
@@ -76,3 +102,80 @@ async function getFlightData(update) {
 
         //console.log(graphic.longitude, ',', graphic.latitude);
         /* console.log(graphic.track, geojson.geometry.track); */
+
+
+
+
+
+
+
+
+
+
+
+        async function getData() {
+    const url = "https://opensky-network.org/api/states/all";
+
+    /* var geojson = {
+        type: 'FeatureCollection',
+        features: [{
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: coordinates,
+                velocity: velocity,
+                track: track,
+                altitude: altitude,
+            },
+            properties: {
+                key: key,
+                information: function() {
+                    return ("ICAO: " + icao + "\nCallign: " + callsign + "\nCoordinates: " + coordinates + "\nVelocity: " + velocity + "\nAltitude: " + altitude + "\nTrack: " + track);
+                }
+            }
+        }]
+    };
+ */
+    key = 0;
+
+    var response = await fetch(url);
+    var data = await response.json();
+
+    //Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
+    for (var key in data.states) {
+
+        //Assigning data from the API into varibles.
+        /* icao = data.states[key][0];
+        callsign = data.states[key][1]
+        longitude = data.states[key][5];
+        latitude = data.states[key][6];
+        velocity = data.states[key][9];
+        track = data.states[key][10];
+        altitude = data.states[key][13];
+
+        coordinates = [longitude, latitude];
+
+        geojson.features.geometry.coordinates.push(coordinates);
+        geojson.features.geometry.velocity.push(velocity);
+        geojson.features.geometry.track.push(track);
+        geojson.features.geometry.altitude.push(altitude);
+        geojson.features.properties.key.push(key); */
+
+        longitude = data.states[key][5];
+        latitude = data.states[key][6];
+        coordinates = [longitude, latitude];
+
+
+        //Creating a HTML class for each marker.
+        var marker = document.createElement("div");
+        marker.className = "marker";
+
+        //Creates the marker in correct position and rotation, adding it to the currentMarkers array.
+        var graphic = new mapboxgl.Marker(marker)
+            .setLngLat(coordinates)
+            .setRotation(data.states[10])
+            .setRotationAlignment('viewport')
+            .addTo(map);
+        currentMarkers.push(graphic);
+    }
+}
