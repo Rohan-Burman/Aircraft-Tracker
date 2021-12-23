@@ -108,7 +108,11 @@ async function getFlightData(update) {
 
 
 
-
+  // Fly the map to the location.
+            map.flyTo({
+                center: [longitude, latitude],
+                speed: 0.5
+            });
 
 
 

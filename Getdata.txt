@@ -1,0 +1,94 @@
+async function getData() {
+    const url = "https://opensky-network.org/api/states/all";
+
+    key = 0;
+
+    /*  var geojson = {
+         type: 'FeatureCollection',
+         features: {
+             type: 'Feature',
+             geometry: {
+                 type: 'Point',
+                 coordinates: [longitude, latitude],
+                 track: track,
+                 velocity: velocity,
+                 altitude: altitude,
+             },
+             properties: {
+                 icao: icao,
+                 key: key,
+                 description: "ICAO: " + icao + "\nCallign: " + callsign + "\nCoordinates: " + coordinates + "\nVelocity: " + velocity + "\nAltitude: " + altitude + "\nTrack: " + track,
+             }
+         }
+     } */
+
+
+    var response = await fetch(url, { method: "GET" });
+    var data = await response.json();
+
+
+    //Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
+    for (var key in data.states) {
+        //Assigning data from the API into varibles.
+        icao = data.states[key][0];
+        callsign = data.states[key][1]
+        longitude = data.states[key][5];
+        latitude = data.states[key][6];
+        velocity = data.states[key][9];
+        track = data.states[key][10];
+        altitude = data.states[key][13];
+
+        coordinates = [longitude, latitude];
+
+        var geoData = {
+            features: {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [longitude, latitude],
+                    track: track,
+                    velocity: velocity,
+                    altitude: altitude,
+                },
+                properties: {
+                    icao: icao,
+                    key: key,
+                    'description': "ICAO: " + icao + "\nCallign: " + callsign + "\nCoordinates: " + coordinates + "\nVelocity: " + velocity + "\nAltitude: " + altitude + "\nTrack: " + track,
+                }
+            }
+
+        }
+        geojson.push(geoData);
+        //fs.writeFile("")
+
+        for (var feature of geojson.features) {
+            //Creating a HTML class for each marker.
+            var marker = document.createElement("div");
+            marker.className = "marker";
+
+            //Creates the marker in correct position and rotation, adding it to the currentMarkers array.
+            var graphic = new mapboxgl.Marker(marker)
+                .setLngLat(feature.geometry.coordinates)
+                .setRotation(feature.geometry.geometrytrack)
+                .setRotationAlignment('map')
+                .addTo(map);
+            currentMarkers.push(graphic);
+        }
+    }
+
+
+
+
+    console.log(geojson);
+}
+
+/* map.on("load", () => { getData() }); */
+getData();
+setInterval(getData, 5000); //Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
+setInterval(clearMarkers, 7500);
+
+
+map.on("load", () => { getData() });
+getData();
+setInterval(getData, 5000); //Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
+setInterval(clearMarkers, 7500);

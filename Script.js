@@ -35,16 +35,19 @@ map.on('mousemove', (e) => {
     document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
 })
 
+
 //Initalising global variables. Each marker graphic will have its own relevant information.
-var icao = "";
-var callsign = "";
-var longitude = 0;
-var latitude = 0;
-var velocity = "";
-var track = 0;
-var altitude = "";
+var icao = [];
+var origin = [];
+var callsign = [];
+var longitude = [];
+var latitude = [];
+var velocity = [];
+var track = [];
+var altitude = [];
 var coordinates = [];
 var currentMarkers = [];
+var clickCoord = [];
 
 
 //
@@ -56,30 +59,29 @@ function clearMarkers() {
     }
 }
 
-//Gets data of aircraft from API, assigns it to variables and makes marker graphic.
-
 
 async function getData() {
     const url = "https://opensky-network.org/api/states/all";
 
-    key = 0;
+    index = 0;
 
     var response = await fetch(url);
     var data = await response.json();
 
 
     //Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
-    for (var key in data.states) {
-        //Assigning data from the API into varibles.
-        icao = data.states[key][0];
-        callsign = data.states[key][1]
-        longitude = data.states[key][5];
-        latitude = data.states[key][6];
-        velocity = data.states[key][9];
-        track = data.states[key][10];
-        altitude = data.states[key][13];
+    for (index in data.states) {
+        //Assigning data from the API into arrays.
+        icao[index] = data.states[index][0];
+        callsign[index] = data.states[index][1]
+        origin[index] = data.states[index][2];
+        longitude[index] = data.states[index][5];
+        latitude[index] = data.states[index][6];
+        velocity[index] = data.states[index][9];
+        track[index] = data.states[index][10];
+        altitude[index] = data.states[index][13];
 
-        coordinates = [longitude, latitude];
+        coordinates[index] = [longitude[index], latitude[index]];
 
         //Creating a HTML class for each marker.
         var marker = document.createElement("div");
@@ -87,13 +89,37 @@ async function getData() {
 
         //Creates the marker in correct position and rotation, adding it to the currentMarkers array.
         var graphic = new mapboxgl.Marker(marker)
-            .setLngLat(coordinates)
-            .setRotation(track)
+            .setLngLat(coordinates[index])
+            .setRotation(track[index])
             .setRotationAlignment('map')
             .addTo(map);
         currentMarkers.push(graphic);
     }
 }
+
+
+
+//Checks if the location of the mouse click is the same as an aircrafts location.
+map.on('click', (function getLocation(e) {
+
+    clickCoord = e.lngLat.toArray();
+
+    clickCoord[0] = clickCoord[0].toFixed(4);
+    clickCoord[1] = clickCoord[1].toFixed(4);
+
+    console.log(clickCoord);
+
+    //Loops through all list of coordinates and checks if the clicked location is the same
+    for (index in coordinates) {
+        if (coordinates[index] == clickCoord) {}
+        new mapboxgl.Popup()
+            .setLngLat(clickCoord)
+            .setHTML('MATCH! You clicked here: <br/>' + clickCoord)
+            .addTo(map);
+    }
+}));
+
+
 
 /* map.on("load", () => { getData() }); */
 getData();
