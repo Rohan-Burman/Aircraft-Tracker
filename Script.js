@@ -1,5 +1,4 @@
 // Creating the map and adding controls.
-
 mapboxgl.accessToken = 'pk.eyJ1IjoicmIyMyIsImEiOiJja3R4MGtlMnExN2JrMnZtcmNnY2E4c2NxIn0.FeT3uCP4BX11Nm_zsPczzw';
 const map = new mapboxgl.Map({
     container: 'map', // container ID
@@ -78,7 +77,6 @@ map.on("load", () => {
             throw error;
         
 
-
         map.addImage,
         age("custom-marker", image);
 
@@ -103,7 +101,7 @@ map.on("load", () => {
                 'get', 'callsign',
                 'get', 'orign',
                 'get', 'coordinates',
-                'get', 'vekocity',
+                'get', 'velocity',
                 'get', 'track',
                 'get', 'altitude',
 
@@ -119,6 +117,14 @@ map.on("load", () => {
     })
 })
 
+map.addSource("points", {
+    "type": "geojson",
+    "data": {
+        "type": "FeatureCollection ",
+        "features": []
+    }
+})
+
 async function getData() {
     const url = "https://opensky-network.org/api/states/all";
 
@@ -127,7 +133,7 @@ async function getData() {
     var response = await fetch(url);
     var data = await response.json();
 
-    markerJson = {}
+    markerJson = []
     
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
@@ -173,7 +179,7 @@ async function getData() {
             }
         }
         //Append to above JSON to markerJson object
-        markerJson = Object.assign(markerJson,obj);
+        markerJson.push(obj);
 
         /*  // Creating a HTML class for each marker.
         var marker = document.createElement("div");
@@ -184,9 +190,9 @@ async function getData() {
         currentMarkers.push(graphic); */
     }
     console.log(markerJson);
-    geojson.features.features= Object.assign(geojson.features.features,markerJson);
-    console.log(geojson);
-    
+    const geojsonSource=map.getSource("points");
+    geojsonSource.setData(markerJson);
+    //console.log(geojsonSource);    
 }
 
 
