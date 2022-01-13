@@ -183,3 +183,83 @@ async function getFlightData(update) {
         currentMarkers.push(graphic);
     }
 }
+
+
+
+/* map.on("load", () => {
+    map.loadImage(imageLink, (error, image) => {
+        if (error) 
+            throw error;
+        
+
+        map.addImage,
+        age("custom-marker", image);
+
+        map.addSource("points", {
+            "type": "geojson",
+            "data": {
+                "type": "FeatureCollection ",
+                "features": []
+            }
+        })
+    })
+
+    map.addLayer({
+        "id": "points",
+        'type': 'symbol',
+        'source': 'points',
+        'layout': {
+            'icon-image': 'custom-marker',
+            // get the title name from the source's "title" property
+            'text-field': [
+                'get', 'icao',
+                'get', 'callsign',
+                'get', 'orign',
+                'get', 'coordinates',
+                'get', 'velocity',
+                'get', 'track',
+                'get', 'altitude',
+
+            ],
+            'text-font': [
+                'Open Sans Semibold', 'Arial Unicode MS Bold'
+            ],
+            'text-offset': [
+                0, 1.25
+            ],
+            'text-anchor': 'top'
+        }
+    })
+})
+
+map.addSource("points", {
+    "type": "geojson",
+    "data": {
+        "type": "FeatureCollection ",
+        "features": []
+    }
+})
+ */
+
+
+  /*  //Assigning data from the API into arrays.
+        icao[index] = data.states[index][0];
+        callsign[index] = data.states[index][1]
+        origin[index] = data.states[index][2];
+        longitude[index] = data.states[index][5];
+        latitude[index] = data.states[index][6];
+        velocity[index] = data.states[index][9];
+        track[index] = data.states[index][10];
+        altitude[index] = data.states[index][13];
+
+        coordinates[index] = [longitude[index], latitude[index]]; */
+
+
+
+        /*  // Creating a HTML class for each marker.
+        var marker = document.createElement("div");
+        marker.className = "marker";
+
+        // Creates the marker in correct position and rotation, adding it to the currentMarkers array.
+        var graphic = new mapboxgl.Marker(marker).setLngLat(coordinates[index]).setRotation(track[index]).setRotationAlignment('map').addTo(map);
+        currentMarkers.push(graphic); */
