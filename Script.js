@@ -35,19 +35,7 @@ map.on('mousemove', (e) => {
 })
 
 
-// Initalising global arrays. Each marker graphic will have its own relevant information.
-/* var icao = [];
-var origin = [];
-var callsign = [];
-var longitude = [];
-var latitude = [];
-var velocity = [];
-var track = [];
-var altitude = [];
-var coordinates = [];
-var currentMarkers = [];
-var clickCoord = [];
- */
+
 
 var icao = "";
 var origin = "";
@@ -70,84 +58,36 @@ function clearMarkers() {
     }
 }
 
-imageLink = "https://github.com/Rohan-Burman/Aircraft-Tracker/blob/main/planeMarker.png?raw=true"
-map.on("load", () => {
-    map.loadImage(imageLink, (error, image) => {
-        if (error) 
-            throw error;
-        
-
-        map.addImage,
-        age("custom-marker", image);
-
-        map.addSource("points", {
-            "type": "geojson",
-            "data": {
-                "type": "FeatureCollection ",
-                "features": []
-            }
-        })
-    })
-
-    map.addLayer({
-        "id": "points",
-        'type': 'symbol',
-        'source': 'points',
-        'layout': {
-            'icon-image': 'custom-marker',
-            // get the title name from the source's "title" property
-            'text-field': [
-                'get', 'icao',
-                'get', 'callsign',
-                'get', 'orign',
-                'get', 'coordinates',
-                'get', 'velocity',
-                'get', 'track',
-                'get', 'altitude',
-
-            ],
-            'text-font': [
-                'Open Sans Semibold', 'Arial Unicode MS Bold'
-            ],
-            'text-offset': [
-                0, 1.25
-            ],
-            'text-anchor': 'top'
-        }
-    })
-})
-
-map.addSource("points", {
-    "type": "geojson",
-    "data": {
-        "type": "FeatureCollection ",
-        "features": []
-    }
-})
 
 async function getData() {
     const url = "https://opensky-network.org/api/states/all";
 
     index = 0;
+    var geojson = {
+        "type": "FeatureCollection",
+        "features": []
+    };
+
+    var parsed = new Array();
+    parsed = geojson.features;
 
     var response = await fetch(url);
     var data = await response.json();
 
-    markerJson = []
-    
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
-    for (index in data.states) { /*  //Assigning data from the API into arrays.
-        icao[index] = data.states[index][0];
-        callsign[index] = data.states[index][1]
-        origin[index] = data.states[index][2];
-        longitude[index] = data.states[index][5];
-        latitude[index] = data.states[index][6];
-        velocity[index] = data.states[index][9];
-        track[index] = data.states[index][10];
-        altitude[index] = data.states[index][13];
+    for (index in data.states) {
+        /*  //Assigning data from the API into arrays.
+               icao[index] = data.states[index][0];
+               callsign[index] = data.states[index][1]
+               origin[index] = data.states[index][2];
+               longitude[index] = data.states[index][5];
+               latitude[index] = data.states[index][6];
+               velocity[index] = data.states[index][9];
+               track[index] = data.states[index][10];
+               altitude[index] = data.states[index][13];
 
-        coordinates[index] = [longitude[index], latitude[index]]; */
+               coordinates[index] = [longitude[index], latitude[index]]; */
 
 
         icao = data.states[index][0];
@@ -158,41 +98,61 @@ async function getData() {
         velocity = data.states[index][9];
         track = data.states[index][10];
         altitude = data.states[index][13]
-        coordinates = [longitude, latitude]
+        coordinates = [longitude, latitude];
 
         obj = {
-            type: "Feature",
-            geometry: {
-                type: "Point",
-                coordinates: coordinates,
-                rotation: track
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": coordinates
             },
-            properties: {
-                icao: icao,
-                callsign: callsign,
-                origin: origin,
-                coordinates: coordinates,
-                velocity: velocity,
-                track: track,
-                altitude: altitude
+            "properties": {
+                "icao": icao,
+                "callsign": callsign,
+                "origin": origin,
+                "coordinates": coordinates,
+                "velocity": velocity,
+                "track": track,
+                "altitude": altitude,
+                "description": "ICAO: " + icao + "\nCallsign: " + callsign + "\nOrigin: " + origin + "\nCoordinates: " + coordinates + "\nVelocity: " + velocity + "\nTrack: " + track + "\nAltitude: " + altitude
 
             }
         }
-        //Append to above JSON to markerJson object
-        markerJson.push(obj);
 
-        /*  // Creating a HTML class for each marker.
-        var marker = document.createElement("div");
-        marker.className = "marker";
 
-        // Creates the marker in correct position and rotation, adding it to the currentMarkers array.
-        var graphic = new mapboxgl.Marker(marker).setLngLat(coordinates[index]).setRotation(track[index]).setRotationAlignment('map').addTo(map);
-        currentMarkers.push(graphic); */
+        objJson = JSON.parse(JSON.stringify(obj));
+
+        //Append to above JSON to geojson object
+
+        parsed.push(objJson);
+
+        /* console.log(obj);
+        console.log(objJson);
+        console.log(geojson);
+        console.log(parsed); */
     }
-    console.log(markerJson);
-    const geojsonSource=map.getSource("points");
-    geojsonSource.setData(markerJson);
-    //console.log(geojsonSource);    
+
+    console.log(geojson);
+    console.log(parsed);
+    /* geojson = JSON.stringify(parsed); 
+    console.log(geojson); */
+
+    for (var feature of geojson.features) {
+        const el = document.createElement('div');
+        el.className = 'marker';
+
+        new mapboxgl.Marker(el)
+            .setLngLat(feature.geometry.coordinates)
+            .setPopup(
+                new mapboxgl.Popup({ offset: 25 }) // add popups
+                .setHTML(
+                    `<h3>${feature.properties.description}</h3>`
+                )
+            )
+            .addTo(map);
+
+    }
+
 }
 
 
