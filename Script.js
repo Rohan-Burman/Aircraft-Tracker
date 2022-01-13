@@ -61,69 +61,15 @@ var coordinates = [];
 var currentMarkers = [];
 var clickCoord = [];
 
-//
 function clearMarkers() {
     if (currentMarkers !== null) {
         currentMarkers.forEach((marker) => marker.remove());
         currentMarkers = [];
-        delete geojson;
+        //delete geojson;
     }
 }
 
 imageLink = "https://github.com/Rohan-Burman/Aircraft-Tracker/blob/main/planeMarker.png?raw=true"
-map.on("load", () => {
-    map.loadImage(imageLink, (error, image) => {
-        if (error) 
-            throw error;
-        
-
-        map.addImage,
-        age("custom-marker", image);
-
-        map.addSource("points", {
-            "type": "geojson",
-            "data": {
-                "type": "FeatureCollection ",
-                "features": []
-            }
-        })
-    })
-
-    map.addLayer({
-        "id": "points",
-        'type': 'symbol',
-        'source': 'points',
-        'layout': {
-            'icon-image': 'custom-marker',
-            // get the title name from the source's "title" property
-            'text-field': [
-                'get', 'icao',
-                'get', 'callsign',
-                'get', 'orign',
-                'get', 'coordinates',
-                'get', 'velocity',
-                'get', 'track',
-                'get', 'altitude',
-
-            ],
-            'text-font': [
-                'Open Sans Semibold', 'Arial Unicode MS Bold'
-            ],
-            'text-offset': [
-                0, 1.25
-            ],
-            'text-anchor': 'top'
-        }
-    })
-})
-
-map.addSource("points", {
-    "type": "geojson",
-    "data": {
-        "type": "FeatureCollection ",
-        "features": []
-    }
-})
 
 async function getData() {
     const url = "https://opensky-network.org/api/states/all";
@@ -132,23 +78,15 @@ async function getData() {
 
     var response = await fetch(url);
     var data = await response.json();
+    
 
-    markerJson = []
+    markerJson = {"type": 'FeatureCollection',
+    "features": []
+};
     
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
-    for (index in data.states) { /*  //Assigning data from the API into arrays.
-        icao[index] = data.states[index][0];
-        callsign[index] = data.states[index][1]
-        origin[index] = data.states[index][2];
-        longitude[index] = data.states[index][5];
-        latitude[index] = data.states[index][6];
-        velocity[index] = data.states[index][9];
-        track[index] = data.states[index][10];
-        altitude[index] = data.states[index][13];
-
-        coordinates[index] = [longitude[index], latitude[index]]; */
-
+    for (index in data.states) {
 
         icao = data.states[index][0];
         callsign = data.states[index][1]
@@ -158,41 +96,47 @@ async function getData() {
         velocity = data.states[index][9];
         track = data.states[index][10];
         altitude = data.states[index][13]
-        coordinates = [longitude, latitude]
+        coordinates = [longitude, latitude];
 
-        obj = {
-            type: "Feature",
-            geometry: {
-                type: "Point",
-                coordinates: coordinates,
-                rotation: track
+        obj= {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": coordinates,
+                "rotation": track,
             },
-            properties: {
-                icao: icao,
-                callsign: callsign,
-                origin: origin,
-                coordinates: coordinates,
-                velocity: velocity,
-                track: track,
-                altitude: altitude
+            "properties": {
+                "icao": icao,
+                "callsign": callsign,
+                "origin": origin,
+                "coordinates": coordinates,
+                "velocity": velocity,
+                "track": track,
+                "altitude": altitude,
 
-            }
-        }
+            },
+        },
+
+        /* parseMarkers=JSON.parse(JSON.stringify(markerJson.features)); */
+        var parseMarkers=Object.entries(parseMarkers);
+        console.log(obj);
+        console.log(JSON.stringify(obj));
+
         //Append to above JSON to markerJson object
-        markerJson.push(obj);
-
-        /*  // Creating a HTML class for each marker.
-        var marker = document.createElement("div");
-        marker.className = "marker";
-
-        // Creates the marker in correct position and rotation, adding it to the currentMarkers array.
-        var graphic = new mapboxgl.Marker(marker).setLngLat(coordinates[index]).setRotation(track[index]).setRotationAlignment('map').addTo(map);
-        currentMarkers.push(graphic); */
+        parseMarkers.push(Object.entries(obj));
+        markerJson=JSON.stringify(parseMarkers);
+        
     }
     console.log(markerJson);
-    const geojsonSource=map.getSource("points");
-    geojsonSource.setData(markerJson);
-    //console.log(geojsonSource);    
+    for (const feature of markerJson.features) {
+        // create a HTML element for each feature
+        const el = document.createElement('div');
+        el.className = 'marker';
+      
+        // make a marker for each feature and add to the map
+        new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
+      }
+
 }
 
 
