@@ -127,6 +127,7 @@ async function getData() {
     for (var feature of geojson.features) {
         var marker = document.createElement('div');
         marker.className = 'marker';
+        //DOES NOT WORK
 
        var graphic= new mapboxgl.Marker(marker)
             .setLngLat(feature.geometry.coordinates)
