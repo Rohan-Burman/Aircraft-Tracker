@@ -21,7 +21,19 @@
 
 
 
-
+// Initalising global arrays. Each marker graphic will have its own relevant information.
+/* var icao = [];
+var origin = [];
+var callsign = [];
+var longitude = [];
+var latitude = [];
+var velocity = [];
+var track = [];
+var altitude = [];
+var coordinates = [];
+var currentMarkers = [];
+var clickCoord = [];
+ */
 
 
 /* map.on("load", async() => {
@@ -107,6 +119,21 @@ async function getFlightData(update) {
 
 
 
+        /*  // Creating a HTML class for each marker.
+        var marker = document.createElement("div");
+        marker.className = "marker";
+
+        // Creates the marker in correct position and rotation, adding it to the currentMarkers array.
+        var graphic = new mapboxgl.Marker(marker).setLngLat(coordinates[index]).setRotation(track[index]).setRotationAlignment('map').addTo(map);
+        currentMarkers.push(graphic); */
+
+
+/* console.log(markerJson);
+    const geojsonSource = map.getSource("points");
+    geojsonSource.setData(markerJson); */
+    //console.log(geojsonSource);    
+
+
 
   // Fly the map to the location.
             map.flyTo({
@@ -115,6 +142,61 @@ async function getFlightData(update) {
             });
 
 
+
+/* imageLink = "https://github.com/Rohan-Burman/Aircraft-Tracker/blob/main/planeMarker.png?raw=true"
+map.on("load", () => {
+    map.loadImage(imageLink, (error, image) => {
+        if (error)
+            throw error;
+
+
+        map.addImage("custom-marker", image);
+
+        map.addSource("points", {
+            "type": "geojson",
+            "data": {
+                "type": "FeatureCollection ",
+                "features": []
+            }
+        })
+    })
+
+    map.addLayer({
+        "id": "points",
+        'type': 'symbol',
+        'source': 'points',
+        'layout': {
+            'icon-image': 'custom-marker',
+            // get the title name from the source's "title" property
+            'text-field': [
+                'get', 'icao',
+                'get', 'callsign',
+                'get', 'orign',
+                'get', 'coordinates',
+                'get', 'velocity',
+                'get', 'track',
+                'get', 'altitude',
+
+            ],
+            'text-font': [
+                'Open Sans Semibold', 'Arial Unicode MS Bold'
+            ],
+            'text-offset': [
+                0, 1.25
+            ],
+            'text-anchor': 'top'
+        }
+    })
+})
+
+map.addSource("points", {
+    "type": "geojson",
+    "data": {
+        "type": "FeatureCollection ",
+        "features": []
+    }
+})
+ */
 
 
         async function getData() {

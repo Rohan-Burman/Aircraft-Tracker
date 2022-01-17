@@ -35,19 +35,7 @@ map.on('mousemove', (e) => {
 })
 
 
-// Initalising global arrays. Each marker graphic will have its own relevant information.
-/* var icao = [];
-var origin = [];
-var callsign = [];
-var longitude = [];
-var latitude = [];
-var velocity = [];
-var track = [];
-var altitude = [];
-var coordinates = [];
-var currentMarkers = [];
-var clickCoord = [];
- */
+
 
 var icao = "";
 var origin = "";
@@ -69,24 +57,38 @@ function clearMarkers() {
     }
 }
 
-imageLink = "https://github.com/Rohan-Burman/Aircraft-Tracker/blob/main/planeMarker.png?raw=true"
 
 async function getData() {
     const url = "https://opensky-network.org/api/states/all";
 
     index = 0;
+    var geojson = {
+        "type": "FeatureCollection",
+        "features": []
+    };
+
+    var parsed = new Array();
+    parsed = geojson.features;
 
     var response = await fetch(url);
     var data = await response.json();
     
 
-    markerJson = {"type": 'FeatureCollection',
-    "features": []
-};
-    
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
     for (index in data.states) {
+        /*  //Assigning data from the API into arrays.
+               icao[index] = data.states[index][0];
+               callsign[index] = data.states[index][1]
+               origin[index] = data.states[index][2];
+               longitude[index] = data.states[index][5];
+               latitude[index] = data.states[index][6];
+               velocity[index] = data.states[index][9];
+               track[index] = data.states[index][10];
+               altitude[index] = data.states[index][13];
+
+               coordinates[index] = [longitude[index], latitude[index]]; */
+
 
         icao = data.states[index][0];
         callsign = data.states[index][1]
@@ -98,12 +100,11 @@ async function getData() {
         altitude = data.states[index][13]
         coordinates = [longitude, latitude];
 
-        obj= {
+        obj = {
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": coordinates,
-                "rotation": track,
+                "coordinates": coordinates
             },
             "properties": {
                 "icao": icao,
@@ -113,29 +114,44 @@ async function getData() {
                 "velocity": velocity,
                 "track": track,
                 "altitude": altitude,
+                "description": "ICAO: " + icao + "\nCallsign: " + callsign + "\nOrigin: " + origin + "\nCoordinates: " + coordinates + "\nVelocity: " + velocity + "\nTrack: " + track + "\nAltitude: " + altitude
 
-            },
-        },
+            }
+        }
 
-        /* parseMarkers=JSON.parse(JSON.stringify(markerJson.features)); */
-        var parseMarkers=Object.entries(parseMarkers);
-        console.log(obj);
-        console.log(JSON.stringify(obj));
 
-        //Append to above JSON to markerJson object
-        parseMarkers.push(Object.entries(obj));
-        markerJson=JSON.stringify(parseMarkers);
-        
+        objJson = JSON.parse(JSON.stringify(obj));
+
+        //Append to above JSON to geojson object
+
+        parsed.push(objJson);
+
+        /* console.log(obj);
+        console.log(objJson);
+        console.log(geojson);
+        console.log(parsed); */
     }
-    console.log(markerJson);
-    for (const feature of markerJson.features) {
-        // create a HTML element for each feature
+
+    console.log(geojson);
+    console.log(parsed);
+    /* geojson = JSON.stringify(parsed); 
+    console.log(geojson); */
+
+    for (var feature of geojson.features) {
         const el = document.createElement('div');
         el.className = 'marker';
-      
-        // make a marker for each feature and add to the map
-        new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
-      }
+
+        new mapboxgl.Marker(el)
+            .setLngLat(feature.geometry.coordinates)
+            .setPopup(
+                new mapboxgl.Popup({ offset: 25 }) // add popups
+                .setHTML(
+                    `<h3>${feature.properties.description}</h3>`
+                )
+            )
+            .addTo(map);
+
+    }
 
 }
 
