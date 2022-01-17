@@ -268,6 +268,8 @@ map.addSource("points", {
 
 
 
+
+
 /* map.on("load", () => {
     map.loadImage(imageLink, (error, image) => {
         if (error) 

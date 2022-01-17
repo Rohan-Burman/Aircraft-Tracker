@@ -77,19 +77,6 @@ async function getData() {
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
     for (index in data.states) {
-        /*  //Assigning data from the API into arrays.
-               icao[index] = data.states[index][0];
-               callsign[index] = data.states[index][1]
-               origin[index] = data.states[index][2];
-               longitude[index] = data.states[index][5];
-               latitude[index] = data.states[index][6];
-               velocity[index] = data.states[index][9];
-               track[index] = data.states[index][10];
-               altitude[index] = data.states[index][13];
-
-               coordinates[index] = [longitude[index], latitude[index]]; */
-
-
         icao = data.states[index][0];
         callsign = data.states[index][1]
         origin = data.states[index][2];
@@ -104,7 +91,7 @@ async function getData() {
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": coordinates
+                "coordinates": [longitude,latitude]
             },
             "properties": {
                 "icao": icao,
@@ -133,16 +120,18 @@ async function getData() {
     }
 
     console.log(geojson);
-    console.log(parsed);
-    /* geojson = JSON.stringify(parsed); 
-    console.log(geojson); */
+    //console.log(parsed);
+    //geojson = JSON.stringify(JSON.parse(geojson)); 
+    console.log(typeof (geojson)); 
 
     for (var feature of geojson.features) {
-        const el = document.createElement('div');
-        el.className = 'marker';
+        var marker = document.createElement('div');
+        marker.className = 'marker';
 
-        new mapboxgl.Marker(el)
+       var graphic= new mapboxgl.Marker(marker)
             .setLngLat(feature.geometry.coordinates)
+            .setRotation(feature.properties.track)
+            .setRotationAlignment('map')
             .setPopup(
                 new mapboxgl.Popup({ offset: 25 }) // add popups
                 .setHTML(
@@ -150,8 +139,10 @@ async function getData() {
                 )
             )
             .addTo(map);
+        currentMarkers.push(graphic);
 
     }
+    console.log(currentMarkers);
 
 }
 
@@ -176,7 +167,8 @@ map.on('click', (function getLocation(e) {
 
 /* map.on("load", () => { getData() }); */
 getData();
-setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
+//setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
+//
 setInterval(clearMarkers, 7500);
 
 
@@ -184,5 +176,5 @@ map.on("load", () => {
     getData()
 });
 getData();
-setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
-setInterval(clearMarkers, 7500);
+//setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
+//setInterval(clearMarkers, 7500);

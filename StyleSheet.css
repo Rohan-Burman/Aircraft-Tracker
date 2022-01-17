@@ -43,7 +43,7 @@ body {
     background: #fff;
 }
 
-.marker {
+.marker{
     background-image: url("planeMarker.png");
     background-size: cover;
     border-radius: 50%;
