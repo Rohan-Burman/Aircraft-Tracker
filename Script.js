@@ -55,6 +55,7 @@ function clearMarkers() {
         currentMarkers = [];
         //delete geojson;
     }
+    
 }
 
 
@@ -77,7 +78,7 @@ async function getData() {
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
     for (index in data.states) {
-        icao = data.states[index][0];
+        icao = data.states[index][0].toUpperCase();
         callsign = data.states[index][1]
         origin = data.states[index][2];
         longitude = data.states[index][5];
@@ -101,7 +102,7 @@ async function getData() {
                 "velocity": velocity,
                 "track": track,
                 "altitude": altitude,
-                "description": "ICAO: " + icao + "\nCallsign: " + callsign + "\nOrigin: " + origin + "\nCoordinates: " + coordinates + "\nVelocity: " + velocity + "\nTrack: " + track + "\nAltitude: " + altitude
+                "description": "ICAO: " + icao + "\nCallsign: " + callsign + "\nOrigin: " + origin + "\nLatitude: " + coordinates[0] +"DD\nLongtitude: " + coordinates[1]+ "DD\nVelocity: " + velocity + "m/s\nTrack: " + track + "DD\nAltitude: " + altitude+"m"
 
             }
         }
@@ -110,72 +111,40 @@ async function getData() {
         objJson = JSON.parse(JSON.stringify(obj));
 
         //Append to above JSON to geojson object
-
         parsed.push(objJson);
 
-        /* console.log(obj);
-        console.log(objJson);
-        console.log(geojson);
-        console.log(parsed); */
     }
-
-    console.log(geojson);
-    //console.log(parsed);
-    //geojson = JSON.stringify(JSON.parse(geojson)); 
-    console.log(typeof (geojson)); 
 
     for (var feature of geojson.features) {
         var marker = document.createElement('div');
-        marker.className = 'marker';
+        marker.className = 'mapboxgl-marker';
         //DOES NOT WORK
 
-       var graphic= new mapboxgl.Marker(marker)
+       var graphic=
+       new mapboxgl.Marker(marker)
             .setLngLat(feature.geometry.coordinates)
             .setRotation(feature.properties.track)
             .setRotationAlignment('map')
             .setPopup(
-                new mapboxgl.Popup({ offset: 25 }) // add popups
+                new mapboxgl.Popup({ offset: 10, className:"popups"}) // add popups
                 .setHTML(
                     `<h3>${feature.properties.description}</h3>`
-                )
-            )
-            .addTo(map);
+                ))
+        .addTo(map);
         currentMarkers.push(graphic);
 
     }
-    console.log(currentMarkers);
-
+    
 }
 
-
-// Checks if the location of the mouse click is the same as an aircrafts location.
-map.on('click', (function getLocation(e) {
-
-    clickCoord = e.lngLat.toArray();
-
-    clickCoord[0] = clickCoord[0].toFixed(4);
-    clickCoord[1] = clickCoord[1].toFixed(4);
-
-    console.log(clickCoord);
-
-    // Loops through all list of coordinates and checks if the clicked location is the same
-    for (index in coordinates) {
-        if (coordinates[index] == clickCoord) {}
-        new mapboxgl.Popup().setLngLat(clickCoord).setHTML('MATCH! You clicked here: <br/>' + clickCoord).addTo(map);
-    }
-}));
-
-
-/* map.on("load", () => { getData() }); */
-getData();
-//setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
-//
-setInterval(clearMarkers, 7500);
 
 
 map.on("load", () => {
     getData()
 });
-getData();
-//setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
-//setInterval(clearMarkers, 7500);
+setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
+
+setInterval(clearMarkers, 5010);
+
+
+

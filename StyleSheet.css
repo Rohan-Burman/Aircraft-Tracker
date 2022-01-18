@@ -43,18 +43,21 @@ body {
     background: #fff;
 }
 
-.marker{
+.mapboxgl-marker{
     background-image: url("planeMarker.png");
     background-size: cover;
-    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border-radius: 0%;
     cursor: pointer;
 }
 
 .mapboxgl-popup {
     max-width: 200px;
+    max-height: 500px;
 }
 
 .mapboxgl-popup-content {
     text-align: center;
-    font-family: 'Open Sans', sans-serif;
+    font-family: Arial;
 }

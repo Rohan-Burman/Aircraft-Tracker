@@ -267,6 +267,22 @@ map.addSource("points", {
 }
 
 
+// Checks if the location of the mouse click is the same as an aircrafts location.
+/* map.on('click', (function getLocation(e) {
+
+    clickCoord = e.lngLat.toArray();
+
+    clickCoord[0] = clickCoord[0].toFixed(4);
+    clickCoord[1] = clickCoord[1].toFixed(4);
+
+    console.log(clickCoord);
+
+    // Loops through all list of coordinates and checks if the clicked location is the same
+    for (index in coordinates) {
+        if (coordinates[index] == clickCoord) {}
+        new mapboxgl.Popup().setLngLat(clickCoord).setHTML('MATCH! You clicked here: <br/>' + clickCoord).addTo(map);
+    }
+})); */
 
 
 
