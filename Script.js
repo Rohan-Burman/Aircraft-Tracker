@@ -45,17 +45,10 @@ map.on("load", () => {
     });
 });
 
-var icao = "";
-var origin = "";
-var callsign = "";
-var longitude = 0;
-var latitude = 0;
-var velocity = 0;
-var track = 0;
-var altitude = 0;
-var coordinates = [];
+
 var currentMarkers = [];
 var clickCoord = [];
+var time = new Date();
 
 function clearMarkers() {
     if (currentMarkers !== null) {
@@ -63,11 +56,22 @@ function clearMarkers() {
         currentMarkers = [];
         //delete geojson;
     }
-
+    console.log("Cleared markers // Timestamp: " + time.getTime());
 }
 
 
 async function getData() {
+    console.log("Getting markers... // Timestamp: " + time.getTime());
+
+    var icao = "";
+    var origin = "";
+    var callsign = "";
+    var longitude = 0;
+    var latitude = 0;
+    var velocity = 0;
+    var track = 0;
+    var altitude = 0;
+    var coordinates = [];
     const url = "https://opensky-network.org/api/states/all";
 
     index = 0;
@@ -149,6 +153,6 @@ async function getData() {
 map.on("load", () => {
     getData()
 });
-setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
+setInterval(getData, 5000); // Calls the getData function every 5s. Will be lowered, but currently used for testing purposes.
 
-setInterval(clearMarkers, 5010);
+setInterval(clearMarkers, 10000); // Calls the clearMarkers function every 10s.
