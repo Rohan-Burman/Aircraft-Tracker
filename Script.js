@@ -10,32 +10,40 @@ const map = new mapboxgl.Map({
     minZoom: 1.5, // minimum zoom
 });
 
-// Disabling rotation of the map and enabling keyboard navigation controls.
-map.dragRotate.disable();
-map.keyboard.enable();
-map.keyboard.disableRotation();
+map.on("load", () => {
+    // Disabling rotation of the map and enabling keyboard navigation controls.
+    map.dragRotate.disable();
+    map.keyboard.enable();
+    map.keyboard.disableRotation();
 
-// Add geolocate control to the map.
-map.addControl(new mapboxgl.GeolocateControl({
-    positionOptions: {
-        enableHighAccuracy: true
-    },
-    // When active the map will receive updates to the device's location as it changes.
-    trackUserLocation: true,
-    // Draw an arrow next to the location dot to indicate which direction the device is heading.
-    showUserHeading: true
-}));
+    //Add Geocoding control.
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken, // Set the access token
+        mapboxgl: mapboxgl, // Set the mapbox-gl instance
+        marker: true, // Use the geocoder's default marker style
+    });
 
-// Add navigation controls to map.
-map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(geocoder, 'top-right');
 
-// Add location tracking of mouse pointer for testing purposes. Will be removed in final product
-map.on('mousemove', (e) => {
-    document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
-})
+    // Add geolocate control to the map.
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        // When active the map will receive updates to the device's location as it changes.
+        trackUserLocation: true,
+        // Draw an arrow next to the location dot to indicate which direction the device is heading.
+        showUserHeading: true
+    }));
 
+    // Add navigation controls to map.
+    map.addControl(new mapboxgl.NavigationControl());
 
-
+    // Add location tracking of mouse pointer for testing purposes. Will be removed in final product
+    map.on('mousemove', (e) => {
+        document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
+    });
+});
 
 var icao = "";
 var origin = "";
@@ -55,7 +63,7 @@ function clearMarkers() {
         currentMarkers = [];
         //delete geojson;
     }
-    
+
 }
 
 
@@ -73,7 +81,7 @@ async function getData() {
 
     var response = await fetch(url);
     var data = await response.json();
-    
+
 
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
@@ -92,7 +100,7 @@ async function getData() {
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": [longitude,latitude]
+                "coordinates": [longitude, latitude]
             },
             "properties": {
                 "icao": icao,
@@ -102,7 +110,7 @@ async function getData() {
                 "velocity": velocity,
                 "track": track,
                 "altitude": altitude,
-                "description": "ICAO: " + icao + "\nCallsign: " + callsign + "\nOrigin: " + origin + "\nLatitude: " + coordinates[0] +"DD\nLongtitude: " + coordinates[1]+ "DD\nVelocity: " + velocity + "m/s\nTrack: " + track + "DD\nAltitude: " + altitude+"m"
+                "description": "ICAO: " + icao + "\nCallsign: " + callsign + "\nOrigin: " + origin + "\nLatitude: " + coordinates[0] + "DD\nLongtitude: " + coordinates[1] + "DD\nVelocity: " + velocity + "m/s\nTrack: " + track + "DD\nAltitude: " + altitude + "m"
 
             }
         }
@@ -120,23 +128,22 @@ async function getData() {
         marker.className = 'mapboxgl-marker';
         //DOES NOT WORK
 
-       var graphic=
-       new mapboxgl.Marker(marker)
+        var graphic =
+            new mapboxgl.Marker(marker)
             .setLngLat(feature.geometry.coordinates)
             .setRotation(feature.properties.track)
             .setRotationAlignment('map')
             .setPopup(
-                new mapboxgl.Popup({ offset: 10, className:"popups"}) // add popups
+                new mapboxgl.Popup({ offset: 10, className: "popups" }) // add popups
                 .setHTML(
                     `<h3>${feature.properties.description}</h3>`
                 ))
-        .addTo(map);
+            .addTo(map);
         currentMarkers.push(graphic);
 
     }
-    
-}
 
+}
 
 
 map.on("load", () => {
@@ -145,6 +152,3 @@ map.on("load", () => {
 setInterval(getData, 5000); // Calls the getData function every 10s. Will be lowered, but currently used for testing purposes.
 
 setInterval(clearMarkers, 5010);
-
-
-
