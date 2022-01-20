@@ -45,6 +45,15 @@ map.on("load", () => {
     });
 });
 
+/* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
+/* function myFunction() {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+      x.className += " responsive";
+    } else {
+      x.className = "topnav";
+    }
+  } */
 
 var currentMarkers = [];
 var clickCoord = [];
@@ -130,7 +139,7 @@ async function getData() {
     for (var feature of geojson.features) {
         var marker = document.createElement('div');
         marker.className = 'mapboxgl-marker';
-        //DOES NOT WORK
+
 
         var graphic =
             new mapboxgl.Marker(marker)
@@ -144,15 +153,14 @@ async function getData() {
                 ))
             .addTo(map);
         currentMarkers.push(graphic);
-
     }
-
 }
+  
 
 
-map.on("load", () => {
+/* map.on("load", () => {
     getData()
-});
+}); */
 setInterval(getData, 5000); // Calls the getData function every 5s. Will be lowered, but currently used for testing purposes.
 
 setInterval(clearMarkers, 10000); // Calls the clearMarkers function every 10s.
