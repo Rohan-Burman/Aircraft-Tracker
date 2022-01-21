@@ -45,6 +45,17 @@ map.on("load", () => {
     });
 });
 
+const layerList = document.getElementById("styleMenu");
+const inputs = layerList.getElementsByTagName("input");
+
+
+for (const input of inputs) {
+    input.onclick = (layer) => {
+        const layerId = layer.target.id;
+        map.setStyle('mapbox://styles/' + layerId)
+    }
+}
+
 /* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
 /* function myFunction() {
     var x = document.getElementById("myTopnav");
@@ -155,7 +166,7 @@ async function getData() {
         currentMarkers.push(graphic);
     }
 }
-  
+
 
 
 /* map.on("load", () => {

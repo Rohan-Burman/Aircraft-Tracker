@@ -13,12 +13,12 @@ body {
 
 #map {
     position: absolute;
-    top: 47px;
+    top: 0px;
     bottom: 0;
     width: 100%;
 }
 
-#mapStyleMenu {
+#styleMenu {
     background: rgb(49, 49, 49);
     padding: 15px;
     color: white;
@@ -42,6 +42,7 @@ body {
     text-align: center;
     color: #222;
     background: #fff;
+    top: 0px !important;
 }
 
 .mapboxgl-marker {
