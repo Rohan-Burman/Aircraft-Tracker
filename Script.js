@@ -167,11 +167,9 @@ async function getData() {
     }
 }
 
-
-
 /* map.on("load", () => {
     getData()
 }); */
-setInterval(getData, 5000); // Calls the getData function every 5s. Will be lowered, but currently used for testing purposes.
+setInterval(getData, 2500); // Calls the getData function every 2.5s. Will be lowered, but currently used for testing purposes.
 
-setInterval(clearMarkers, 10000); // Calls the clearMarkers function every 10s.
+setInterval(clearMarkers, 5000); // Calls the clearMarkers function every 5s.
