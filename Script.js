@@ -56,19 +56,13 @@ for (const input of inputs) {
     }
 }
 
-/* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
-/* function myFunction() {
-    var x = document.getElementById("myTopnav");
-    if (x.className === "topnav") {
-      x.className += " responsive";
-    } else {
-      x.className = "topnav";
-    }
-  } */
+
 
 var currentMarkers = [];
 var clickCoord = [];
 var time = new Date();
+
+
 
 function clearMarkers() {
     if (currentMarkers !== null) {
@@ -78,7 +72,6 @@ function clearMarkers() {
     }
     console.log("Cleared markers // Timestamp: " + time.getTime());
 }
-
 
 async function getData() {
     console.log("Getting markers... // Timestamp: " + time.getTime());
@@ -106,6 +99,8 @@ async function getData() {
     var response = await fetch(url);
     var data = await response.json();
 
+    const bounds = map.getBounds();
+    console.log(bounds);
 
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
@@ -170,6 +165,6 @@ async function getData() {
 /* map.on("load", () => {
     getData()
 }); */
-setInterval(getData, 2500); // Calls the getData function every 2.5s. Will be lowered, but currently used for testing purposes.
+setInterval(getData, 4000); // Calls the getData function every 2.5s. Will be lowered, but currently used for testing purposes.
 
-setInterval(clearMarkers, 5000); // Calls the clearMarkers function every 5s.
+setInterval(clearMarkers, 8000); // Calls the clearMarkers function every 5s.
