@@ -17,7 +17,68 @@
         <label for="ckvcr41l82igb15o20zlmtz6i">Blue</label>
     </div>
 
+    
+    <!--Navigation bar-->
+    <!--Not essential so will be finished at a later stage-->
 
+    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   
+    
+    <div class="topnav" id="navbar">
+        <a href="#Tracker" class="active">Tracker</a>
+        <a href="#contact" >Contact</a>
+        <a href="#about">About</a>
+            <i class="fa fa-bars"></i>
+    </div>
+ -->
+featureLat = feature.geometry.coordinates[1];
+        featureLng = feature.geometry.coordinates[0];
+        console.log(featureLng, featureLat);
+
+
+
+#coord {
+    display: table;
+    position: relative;
+    margin: 0px auto;
+    word-wrap: normal;
+    white-space: pre-wrap;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    color: #222;
+    background: #fff;
+    top: 0px !important;
+}
+
+function getViewBounds() {
+
+    bounds = map.getBounds().toArray();
+
+    console.log(bounds);
+
+    nw[0] = bounds[1][0];
+    nw[1] = bounds[0][1];
+    ne = bounds[1];
+    sw = bounds[0];
+    se[0] = bounds[0][0];
+    se[1] = bounds[1][1];
+
+    //console.log("ne:" + ne + "\nnw: " + nw + "\nse: " + se + "\nsw: " + sw);
+}
+
+var bounds;
+var nw = [];
+var ne = [];
+var sw = [];
+var se = [];
+
+    // Add location tracking of mouse pointer for testing purposes. Will be removed in final product
+    map.on('mousemove', (e) => {
+        document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
+    });
 .topnav {
     background-color: rgb(49,49,49);
     overflow: hidden;

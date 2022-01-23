@@ -29,22 +29,6 @@ body {
     border-radius: 10px;
 }
 
-#coord {
-    display: table;
-    position: relative;
-    margin: 0px auto;
-    word-wrap: normal;
-    white-space: pre-wrap;
-    padding: 10px;
-    border: none;
-    border-radius: 3px;
-    font-size: 12px;
-    text-align: center;
-    color: #222;
-    background: #fff;
-    top: 0px !important;
-}
-
 .mapboxgl-marker {
     background-image: url("planeMarker.png");
     background-size: cover;

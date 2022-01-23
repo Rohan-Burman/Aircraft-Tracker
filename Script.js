@@ -38,16 +38,10 @@ map.on("load", () => {
 
     // Add navigation controls to map.
     map.addControl(new mapboxgl.NavigationControl());
-
-    // Add location tracking of mouse pointer for testing purposes. Will be removed in final product
-    map.on('mousemove', (e) => {
-        document.getElementById("coord").innerHTML = JSON.stringify(e.lngLat.wrap());
-    });
 });
 
 const layerList = document.getElementById("styleMenu");
 const inputs = layerList.getElementsByTagName("input");
-
 
 for (const input of inputs) {
     input.onclick = (layer) => {
@@ -56,19 +50,15 @@ for (const input of inputs) {
     }
 }
 
-
-
 var currentMarkers = [];
 var clickCoord = [];
 var time = new Date();
-
 
 
 function clearMarkers() {
     if (currentMarkers !== null) {
         currentMarkers.forEach((marker) => marker.remove());
         currentMarkers = [];
-        //delete geojson;
     }
     console.log("Cleared markers // Timestamp: " + time.getTime());
 }
@@ -99,9 +89,6 @@ async function getData() {
     var response = await fetch(url);
     var data = await response.json();
 
-    const bounds = map.getBounds();
-    console.log(bounds);
-
 
     // Loops throuugn the API response and assigns variables for each flight to be made into a marker graphic.
     for (index in data.states) {
@@ -130,7 +117,6 @@ async function getData() {
                 "track": track,
                 "altitude": altitude,
                 "description": "ICAO: " + icao + "\nCallsign: " + callsign + "\nOrigin: " + origin + "\nLatitude: " + coordinates[0] + "DD\nLongtitude: " + coordinates[1] + "DD\nVelocity: " + velocity + "m/s\nTrack: " + track + "DD\nAltitude: " + altitude + "m"
-
             }
         }
 
@@ -146,7 +132,6 @@ async function getData() {
         var marker = document.createElement('div');
         marker.className = 'mapboxgl-marker';
 
-
         var graphic =
             new mapboxgl.Marker(marker)
             .setLngLat(feature.geometry.coordinates)
@@ -161,10 +146,10 @@ async function getData() {
         currentMarkers.push(graphic);
     }
 }
+map.on("load", () => {
+    getData();
 
-/* map.on("load", () => {
-    getData()
-}); */
-setInterval(getData, 4000); // Calls the getData function every 2.5s. Will be lowered, but currently used for testing purposes.
+    setInterval(getData, 5000); // Calls the getData function every 2.5s. Will be lowered, but currently used for testing purposes.
 
-setInterval(clearMarkers, 8000); // Calls the clearMarkers function every 5s.
+    setInterval(clearMarkers, 10000); // Calls the clearMarkers function every 5s.
+})
