@@ -52,19 +52,29 @@ for (const input of inputs) {
 
 var currentMarkers = [];
 var clickCoord = [];
-var time = new Date();
+var time;
+
+
+function getTime(){
+    var current = new Date();
+    time = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+}
+
+
 
 
 function clearMarkers() {
+    getTime();
     if (currentMarkers !== null) {
         currentMarkers.forEach((marker) => marker.remove());
         currentMarkers = [];
     }
-    console.log("Cleared markers // Timestamp: " + time.getTime());
+    console.log("Cleared markers // Timestamp: " + time);
 }
 
 async function getData() {
-    console.log("Getting markers... // Timestamp: " + time.getTime());
+    getTime();
+    console.log("Getting markers... // Timestamp: " + time);
 
     var icao = "";
     var origin = "";
