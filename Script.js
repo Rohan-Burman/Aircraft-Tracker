@@ -112,23 +112,26 @@ async function getData() {
         altitude = data.states[index][13]
         coordinates = [longitude, latitude];
 
-        if (callsign == null) {
+        if (callsign == "null" || callsign == null) {
             callsign = "N/A";
         }
-        if (origin == null) {
+        if (origin == "null" || origin == null) {
             origin = "N/A";
         }
-        if (velocity == null) {
+        if (velocity == "null" || velocity == null) {
             velocity = "N/A";
         }
-        if (track == null) {
+        if (track == "null" || track == null) {
             track = "N/A";
         }
-        if (altitude == null) {
+        if (altitude == "null" || altitude == null) {
             altitude = "N/A";
         }
-        if (icao == null) {
+        if (icao == "null" || icao == null) {
             icao = "N/A";
+        }
+        if (longitude == "null" || longitude == null || latitude == "null" || latitude == null) {
+            continue;
         }
 
 
