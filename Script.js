@@ -55,7 +55,7 @@ var clickCoord = [];
 var time;
 
 
-function getTime(){
+function getTime() {
     var current = new Date();
     time = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
 }
@@ -112,6 +112,26 @@ async function getData() {
         altitude = data.states[index][13]
         coordinates = [longitude, latitude];
 
+        if (callsign == null) {
+            callsign = "N/A";
+        }
+        if (origin == null) {
+            origin = "N/A";
+        }
+        if (velocity == null) {
+            velocity = "N/A";
+        }
+        if (track == null) {
+            track = "N/A";
+        }
+        if (altitude == null) {
+            altitude = "N/A";
+        }
+        if (icao == null) {
+            icao = "N/A";
+        }
+
+
         obj = {
             "type": "Feature",
             "geometry": {
@@ -154,6 +174,7 @@ async function getData() {
                 ))
             .addTo(map);
         currentMarkers.push(graphic);
+
     }
 }
 map.on("load", () => {
